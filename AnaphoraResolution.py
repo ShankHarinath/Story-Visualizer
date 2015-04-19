@@ -2,6 +2,9 @@ import nltk
 from nltk import *
 import os
 from subprocess import Popen, PIPE
+from nltk.tag import *
+from nltk.chunk.util import *
+from nltk.chunk.regexp import *
 
 
 currPerson = ""
@@ -20,9 +23,9 @@ PRP_Other = ["his","her","His","Her"]
 memory = {}
 
 singleSentence = ""
-taggedList=[]
 
-with open("NewTestFile","r") as f:
+
+with open("newone","r") as f:
 	lines = f.readlines()
 
 for line in lines:
@@ -30,87 +33,59 @@ for line in lines:
 
 sentences = tokenize.sent_tokenize(singleSentence)
 
+ner_tagger = SennaNERTagger('/home/ankita1005/Pictures/senna')
+for sentence in sentences:
+	taggedLine = ner_tagger.tag(word_tokenize(sentence))
+	length = len(taggedLine)
+	for i,w in enumerate(taggedLine):
+		
+		NERtag = taggedLine[i][1]
+		if NERtag == "B-PER" :
+			word = taggedLine[i][0]
+			if i < length -1:
+				if taggedLine[i+1][1] == "I-PER":
+					i+=1
+					while taggedLine[i][1] == "I-PER": 
+						word = word +" "+taggedLine[i][0]
+						i+=1
+			Person.add(word)
+		if NERtag == "B-ORG":
+			word = taggedLine[i][0]
+			if i < length -1:
+				if taggedLine[i+1][1] == "I-ORG":
+					i+=1
+					while taggedLine[i][1] == "I-ORG": 
+						word = word +" "+taggedLine[i][0]
+						i+=1
+			Organisation.add(word)
+		if NERtag == "B-LOC":
+			word = taggedLine[i][0]
+			if i < length -1:
+				if taggedLine[i+1][1] == "I-LOC":
+					i+=1
+					while taggedLine[i][1] == "I-LOC": 
+						word = word +" "+taggedLine[i][0]
+						i+=1
+			Location.add(word)
+		
 
 
-process = Popen(["java", "-jar", "/home/ankita1005/NLP/Project/JavaRAP_1.13/AnaphoraResolution.jar", "/home/ankita1005/NLP/Project/JavaRAP_1.13/NewTestFile"], stdout=PIPE)
+
+process = Popen(["java", "-jar", "/home/ankita1005/NLP/Project/JavaRAP_1.13/AnaphoraResolution.jar", "/home/ankita1005/NLP/Project/JavaRAP_1.13/newone"], stdout=PIPE)
 (output, err) = process.communicate()
 anaphores = str(output).split("\\n***********Head of Results**************\\n")[1].split("\\n***********End of Results***************\\n\\n")[0].split(", \\n")
-
-with open("NERTaggedOutput","r") as f1:
-	NERTaggedlines = f1.readlines()
-
-for line in NERTaggedlines:
-	newLine = line.split("\n")
-	for aLine in newLine:
-		taggedList.append(aLine.split("\t"))
-newTaggedList = [x for x in taggedList if x != ['']]
-length = len(newTaggedList)
-for i,w in enumerate(newTaggedList):
 	
-	NERtag = newTaggedList[i][1].lstrip()
-	if NERtag == "S-PER":
-		word = newTaggedList[i][0].lstrip()
-		Person.add(word)
-	if NERtag == "S-ORG":
-		word = newTaggedList[i][0].lstrip()
-		Organisation.add(word)
-	if NERtag == "S-LOC":
-		word = newTaggedList[i][0].lstrip()
-		Location.add(word)
-	if i < length -2:
-		if NERtag == "B-PER":
-			
-			if NERtag == "B-PER" and newTaggedList[i+1][1].lstrip() == "E-PER":
-				word = newTaggedList[i][0].lstrip()+" "+ newTaggedList[i+1][0].lstrip()
-				Person.add(word)
-			if newTaggedList[i+1][1].lstrip() == "I-PER":
-				
-				word = newTaggedList[i][0].lstrip()
-				i+=1
-				while newTaggedList[i][1].lstrip() == "I-PER": 
-					word = word +" "+newTaggedList[i][0].lstrip()
-					i+=1
-				if newTaggedList[i][1].lstrip() == "E-PER":
-					word = word+" "+ newTaggedList[i][0].lstrip()
-				Person.add(word)
-		if NERtag == "B-ORG":
-			if NERtag == "B-ORG" and newTaggedList[i+1][1].lstrip() == "E-ORG":
-				word = newTaggedList[i][0].lstrip()+" "+ newTaggedList[i+1][0].lstrip()
-				Organisation.add(word)
-			if newTaggedList[i+1][1].lstrip() == "I-ORG":
-				
-				word = newTaggedList[i][0].lstrip()
-				i+=1
-				while newTaggedList[i][1].lstrip() == "I-ORG": 
-					word = word +" "+newTaggedList[i][0].lstrip()
-					i+=1
-				if newTaggedList[i][1].lstrip() == "E-ORG":
-					word = word+" "+ newTaggedList[i][0].lstrip()
-				Organisation.add(word)
-		if NERtag == "B-LOC":
-			if NERtag == "B-LOC" and newTaggedList[i+1][1].lstrip() == "E-LOC":
-				word = newTaggedList[i][0].lstrip()+" "+ newTaggedList[i+1][0].lstrip()
-				Location.add(word)
-			if newTaggedList[i+1][1].lstrip() == "I-LOC":
-				
-				word = newTaggedList[i][0].lstrip()
-				i+=1
-				while newTaggedList[i][1].lstrip() == "I-LOC": 
-					word = word +" "+newTaggedList[i][0].lstrip()
-					i+=1
-				if newTaggedList[i][1].lstrip() == "E-LOC":
-					word = word+" "+ newTaggedList[i][0].lstrip()
-				Location.add(word)
-			
-			
+previousNoun = ""
 
-print(anaphores)
-print("****")
 for anaphor in anaphores:
 	#print(anaphor)
+
 	data = anaphor.split("<--")
 	value = data[0].split(")")
-	noun = value[1].strip()
+	if len(value) > 1:
+		noun = value[1].strip()
+	else:
+		noun = previousNoun
 	key = data[1].strip()
 	lineNumber = key.split(" ")[0].split(",")[0].lstrip("(")
 	pronounToBeReplaced = key.split(" ")[1]
@@ -123,14 +98,31 @@ for anaphor in anaphores:
 	lineToBeReplaced = sentences[int(lineNumber)]
 	print(lineToBeReplaced)
 	
-	if (pronounToBeReplaced in PRP and noun in Person)  or (pronounToBeReplaced in it and (noun in Location or noun in Organisation)):
-		
+	
+	#print(noun)
+	
+	if pronounToBeReplaced in PRP and noun in Person:
 		a = lineToBeReplaced.replace(pronounToBeReplaced,noun)
 		sentences[int(lineNumber)] = a
+	elif pronounToBeReplaced in PRP_Other and noun in Person:
+		a = lineToBeReplaced.replace(pronounToBeReplaced,noun)
+		sentences[int(lineNumber)] = a
+	elif pronounToBeReplaced in it:
+		if noun in Person and previousNoun not in Person:
+			a = lineToBeReplaced.replace(pronounToBeReplaced,previousNoun)
+			sentences[int(lineNumber)] = a
+		else:
+			a = lineToBeReplaced.replace(pronounToBeReplaced,noun)
+			sentences[int(lineNumber)] = a
+			
 	elif pronounToBeReplaced in theyThem:
-		
+		a = lineToBeReplaced.replace(pronounToBeReplaced,noun)
+		sentences[int(lineNumber)] = a
+	else:
 		a = lineToBeReplaced.replace(pronounToBeReplaced,noun)
 		sentences[int(lineNumber)] = a
 		
+	previousNoun = noun	
 	print(a)
 	print("******")
+	
