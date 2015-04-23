@@ -3,11 +3,14 @@ from nltk.tree import *
 from copy import deepcopy
 from operator import itemgetter
 import re
+import os
 
 info = []
 def main():
 	global info
 	left = ""
+	input_file = "input.txt"
+	os.system("/usr/local/java/jdk1.8.0_20/bin/java -cp \"*:.\" TextSimplification "+input_file)
 	trees = read_parse_trees("trees.txt")
 	for tree in trees:
 		positions = tree.treepositions()
