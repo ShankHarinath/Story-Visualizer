@@ -1,3 +1,11 @@
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,14 +23,23 @@ import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
+import edu.stanford.nlp.process.DocumentPreprocessor;
+import edu.stanford.nlp.process.PTBTokenizer;
+import edu.stanford.nlp.process.Tokenizer;
+import edu.stanford.nlp.process.TokenizerFactory;
+import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.CoreMap;
 
 
 @SuppressWarnings("serial")
 public class TextSimplification {
-	
+
 	public static List<String> replacementList = new ArrayList<String>() {{
 		add("he");
 		add("him");
@@ -44,28 +61,34 @@ public class TextSimplification {
 		add("my");
 		add("this");
 	}};
-	
+
 	public static String resolvedSentences = "";
-
-	public static void main(String[] args) {
-
-		String text = "Harriet Beecher is a writer."
-				+ " She was born in Litchfield, Connecticut, USA, the daughter of Lyman Beecher."
-				+ " Raised by her severe Calvinist father, she was educated and then taught at the Hartford "
-				+ "Female Seminary (founded by her sister Catherine Beecher). "
-				+ "Moving to Cincinnati with her father (in 1832), she began to write short fiction, and "
-				+ "after her marriage (in 1836) persevered in her writing while raising seven children.";
-		
-		resolveAnaphora(text);
-		System.out.println(resolvedSentences);
-	}
 	
+	private final static String PCG_MODEL = "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz";        
+
+	private final static TokenizerFactory<CoreLabel> tokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "invertible=true");
+
+	private static final LexicalizedParser parser = LexicalizedParser.loadModel(PCG_MODEL);
+
+	public static void main(String[] args) throws IOException 
+	{
+		String text = new String(Files.readAllBytes(Paths.get(args[0])), StandardCharsets.UTF_8);
+		text = text.replace("\n", " ");
+
+		//Resolve Anaphora
+		resolveAnaphora(text);
+
+		//Create ParseTrees
+		startParsing((TextSimplification.resolvedSentences));
+	}
+
 	public static void resolveAnaphora(String text){
-		
+
 		Annotation document = new Annotation(text);
 		Properties props = new Properties();
 		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-		props.put("dcoref.female", "/Users/Shank/Desktop/Stanford/females.txt");
+		props.put("dcoref.female", "female.unigram.txt");
+		props.put("dcoref.male", "male.unigram.txt");
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		pipeline.annotate(document);
 
@@ -120,4 +143,60 @@ public class TextSimplification {
 			resolvedSentences += sent + "\n";
 		});
 	}
+
+	public static Tree parse(String str) {                
+		List<CoreLabel> tokens = tokenize(str);
+		Tree tree = parser.apply(tokens);
+		return tree;
+	}
+
+	private static List<CoreLabel> tokenize(String str) {
+		Tokenizer<CoreLabel> tokenizer =
+				tokenizerFactory.getTokenizer(new StringReader(str));    
+		return tokenizer.tokenize();
+	}
+
+	public static void startParsing(String paragraph) throws FileNotFoundException, IOException 
+	{ 
+		String parseTrees = "";
+		//		String paragraph = new String(Files.readAllBytes(Paths.get("input.txt")), StandardCharsets.UTF_8);
+		//		paragraph = paragraph.replace("\n", " ");
+
+		//Can we just split on new line as paragraph is already sentence splitted.
+		Reader reader = new StringReader(paragraph);
+		DocumentPreprocessor dp = new DocumentPreprocessor(reader);
+		List<String> sentenceList = new ArrayList<String>();
+
+		for (List<HasWord> sentence : dp) {
+			String sentenceString = Sentence.listToString(sentence);
+			sentenceList.add(sentenceString.toString());
+		}
+
+		for (String sentence : sentenceList) 
+		{
+			System.out.println(sentence);
+			parseTrees += createParseTree(sentence);
+		}
+		writeParseTreeToFile(parseTrees);        
+
+
+	}
+	public static void writeParseTreeToFile(String parseTrees) throws IOException
+	{
+		FileWriter fout = new FileWriter("trees.txt");
+		String[] trees = parseTrees.split("\\r?\\n");
+		for(String tree : trees)
+		{
+			fout.write(tree);
+			fout.write("\n");
+		}
+		fout.close();
+	}
+	public static String createParseTree(String sentence)
+	{
+		Tree tree = parse(sentence);  
+		System.out.println(tree.toString());
+		return (tree.toString()+"\n");
+	}
+
 }
