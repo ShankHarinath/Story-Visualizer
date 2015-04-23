@@ -4,6 +4,7 @@ from copy import deepcopy
 from operator import itemgetter
 import re
 import os
+import cPickle
 
 info = []
 def main():
@@ -11,7 +12,10 @@ def main():
 	left = ""
 	input_file = "input.txt"
 	os.system("/usr/local/java/jdk1.8.0_20/bin/java -cp \"*:.\" TextSimplification "+input_file)
+	
 	trees = read_parse_trees("trees.txt")
+	relations = []
+
 	for tree in trees:
 		positions = tree.treepositions()
 		#positions = level_wise_sort(positions,[0])
@@ -26,10 +30,11 @@ def main():
 				positions = update_positions(positions)
 			else:	
 				positions.pop(0)
-		print_output()
+		relations = deepcopy(print_output(relations))
 		info = []
-
 		tree.draw()
+	cPickle.dump(relations, open('relations.txt', 'wb')) 
+		
 
 def update_positions(positions):
 	start = positions[0]
@@ -62,7 +67,7 @@ def format_tree(tree):
 	sentence = ' '.join(sentence.split())
 	return sentence
 
-def print_output():
+def print_output(relations):
 	global info
 	for index in range(len(info)):
 		info[index][0] = format_tree(info[index][0])
@@ -70,6 +75,8 @@ def print_output():
 		info[index][2] = format_tree(info[index][2])
 		if re.search('[a-zA-Z]', info[index][0]) and re.search('[a-zA-Z]', info[index][1]) and re.search('[a-zA-Z]', info[index][2]): 
 			print(info[index])
+			relations.append(info[index])
+	return relations
 
 def get_right_part(tree,relation,root,left):
 	global info
