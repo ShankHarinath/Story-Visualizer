@@ -1,0 +1,93 @@
+(lp1
+(lp2
+S'Inkit'
+p3
+aS'works'
+p4
+aS'at USC'
+p5
+aa(lp6
+S'Inkit'
+p7
+aS'opened'
+p8
+aS"Inkit 's bag and spread"
+p9
+aa(lp10
+S'Inkit'
+p11
+aS'opened'
+p12
+aS"out Inkit 's professional equipment"
+p13
+aa(lp14
+S"Inkit 's equipments"
+p15
+aS'consisted'
+p16
+aS'of a dozen cowrie shells , a square piece of cloth'
+p17
+aa(lp18
+S"Inkit 's equipments"
+p19
+aS'consisted'
+p20
+aS'with obscure mystic charts'
+p21
+aa(lp22
+S"Inkit 's equipments"
+p23
+aS'consisted'
+p24
+aS'on a square piece of cloth , a notebook , and a bundle of palmyra writing'
+p25
+aa(lp26
+S"Inkit 's forehead"
+p27
+aS'was resplendent'
+p28
+aS'with sacred ash and vermilion'
+p29
+aa(lp30
+S"Inkit 's eyes"
+p31
+aS'sparkled'
+p32
+aS'with a sharp , abnormal gleam'
+p33
+aa(lp34
+S"Inkit 's eyes"
+p35
+aS'sparkled'
+p36
+aS"which was really an outcome of a continual searching look for customers , but which Inkit 's simple clients took to be a prophetic light and felt comforted"
+p37
+aa(lp38
+S"The power of Inkit 's eyes"
+p39
+aS'was considerably enhanced'
+p40
+aS"by customers position placed as customers were between the painted forehead and the dark whiskers which streamed down Inkit 's cheeks"
+p41
+aa(lp42
+S"a half-wit 's eyes"
+p43
+aS'sparkle'
+p44
+aS'in such a setting'
+p45
+aa(lp46
+S'one'
+p47
+aS'crown'
+p48
+aS"the effect a half-wit 's wound a saffron colored turban around a half-wit 's"
+p49
+aa(lp50
+S"To crown the effect a half-wit 's wound a saffron colored turban around a half-wit 's"
+p51
+aS"'s"
+p52
+aS'head'
+p53
+aa.
