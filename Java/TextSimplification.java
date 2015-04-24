@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import edu.stanford.nlp.process.Tokenizer;
 import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.CoreMap;
-
+import edu.stanford.nlp.util.logging.RedwoodConfiguration;
 
 @SuppressWarnings("serial")
 public class TextSimplification {
@@ -63,7 +64,7 @@ public class TextSimplification {
 	}};
 
 	public static String resolvedSentences = "";
-	
+
 	private final static String PCG_MODEL = "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz";        
 
 	private final static TokenizerFactory<CoreLabel> tokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "invertible=true");
@@ -76,13 +77,20 @@ public class TextSimplification {
 		text = text.replace("\n", " ");
 
 		//Resolve Anaphora
+		System.out.println("Anaphora Resolution...");
 		resolveAnaphora(text);
+		System.out.println("Anaphora Resolution Completed!\nIntermediate Output in \"AnaphoraResolved.txt\"");
+		writeToFile(resolvedSentences, "AnaphoraResolved.txt");
 
 		//Create ParseTrees
-		startParsing((TextSimplification.resolvedSentences));
+		System.out.println("Parse Tree Generation...");
+		startParsing((resolvedSentences));
+		System.out.println("Parse Tree Generation Completed!\nIntermediate Output in \"Tree.txt\"");
 	}
 
 	public static void resolveAnaphora(String text){
+
+		RedwoodConfiguration.empty().capture(System.err).apply();
 
 		Annotation document = new Annotation(text);
 		Properties props = new Properties();
@@ -91,6 +99,8 @@ public class TextSimplification {
 		props.put("dcoref.male", "male.unigram.txt");
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		pipeline.annotate(document);
+		
+		RedwoodConfiguration.current().clear().apply();
 
 		Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
 		List<CoreMap> stnfrdSentences = document.get(SentencesAnnotation.class);
@@ -121,7 +131,7 @@ public class TextSimplification {
 			});
 			CoreMap sentence = stnfrdSentences.get(sentNum-1);
 			List<CoreLabel> stnfrdtokens = sentence.get(TokensAnnotation.class);
-
+			
 			list.forEach(pair -> {
 				CorefChain chain = pair.getLeft();
 				CorefMention mention = pair.getRight();
@@ -159,8 +169,6 @@ public class TextSimplification {
 	public static void startParsing(String paragraph) throws FileNotFoundException, IOException 
 	{ 
 		String parseTrees = "";
-		//		String paragraph = new String(Files.readAllBytes(Paths.get("input.txt")), StandardCharsets.UTF_8);
-		//		paragraph = paragraph.replace("\n", " ");
 
 		//Can we just split on new line as paragraph is already sentence splitted.
 		Reader reader = new StringReader(paragraph);
@@ -174,29 +182,26 @@ public class TextSimplification {
 
 		for (String sentence : sentenceList) 
 		{
-			System.out.println(sentence);
+			//			System.out.println(sentence);
 			parseTrees += createParseTree(sentence);
 		}
-		writeParseTreeToFile(parseTrees);        
-
-
+		writeToFile(parseTrees, "trees.txt");        
 	}
-	public static void writeParseTreeToFile(String parseTrees) throws IOException
+
+	public static void writeToFile(String content, String filename) throws IOException
 	{
-		FileWriter fout = new FileWriter("trees.txt");
-		String[] trees = parseTrees.split("\\r?\\n");
-		for(String tree : trees)
-		{
-			fout.write(tree);
-			fout.write("\n");
-		}
+		File file = new File(filename);
+		file.delete();
+
+		FileWriter fout = new FileWriter(filename);
+		fout.write(content);
 		fout.close();
 	}
+
 	public static String createParseTree(String sentence)
 	{
 		Tree tree = parse(sentence);  
-		System.out.println(tree.toString());
+		//		System.out.println(tree.toString());
 		return (tree.toString()+"\n");
 	}
-
 }
