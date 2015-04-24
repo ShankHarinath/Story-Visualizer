@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -47,20 +46,22 @@ public class TextSimplification {
 		add("his");
 		add("she");
 		add("her");
-		add("it");
 		add("they");
 		add("them");
 		add("their");
 		add("i");
-		add("its");
 		add("her's");
-		add("that");
 		add("you");
 		add("your");
 		add("your's");
 		add("mine");
 		add("my");
-		add("this");
+		add("us");
+		add("we");
+		//		add("it");
+		//		add("its");
+		//		add("this");
+		//		add("that");
 	}};
 
 	public static String resolvedSentences = "";
@@ -73,6 +74,12 @@ public class TextSimplification {
 
 	public static void main(String[] args) throws IOException 
 	{
+
+		//:TODO
+		// * Do not consider roots with more than 2 words
+		// * Root should not be he, she her, his, him etc...
+		// * If it is, den take the last known gender noun and make it the root.
+
 		String text = new String(Files.readAllBytes(Paths.get(args[0])), StandardCharsets.UTF_8);
 		text = text.replace("\n", " ");
 
@@ -99,7 +106,7 @@ public class TextSimplification {
 		props.put("dcoref.male", "male.unigram.txt");
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		pipeline.annotate(document);
-		
+
 		RedwoodConfiguration.current().clear().apply();
 
 		Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
@@ -122,23 +129,24 @@ public class TextSimplification {
 		});
 
 		recordsOrdered.build().asMap().forEach((sentNum, mentionList) -> {
-			Stream<Pair<CorefChain, CorefMention>> list = mentionList.stream().sorted(new Comparator<Pair<CorefChain, CorefMention>>() {
-				@Override
-				public int compare(Pair<CorefChain, CorefMention> o1,
-						Pair<CorefChain, CorefMention> o2) {
-					return o1.getRight().startIndex - o2.getRight().startIndex;
-				}
-			});
+			//			Stream<Pair<CorefChain, CorefMention>> list = mentionList.stream().sorted(new Comparator<Pair<CorefChain, CorefMention>>() {
+			//				@Override
+			//				public int compare(Pair<CorefChain, CorefMention> o1,
+			//						Pair<CorefChain, CorefMention> o2) {
+			//					return o1.getRight().startIndex - o2.getRight().startIndex;
+			//				}
+			//			});
 			CoreMap sentence = stnfrdSentences.get(sentNum-1);
 			List<CoreLabel> stnfrdtokens = sentence.get(TokensAnnotation.class);
-			
-			list.forEach(pair -> {
+
+			mentionList.forEach(pair -> {
 				CorefChain chain = pair.getLeft();
 				CorefMention mention = pair.getRight();
 				String root = chain.getRepresentativeMention().mentionSpan;
 
 				if(!mention.mentionSpan.equalsIgnoreCase(root) 
-						&& replacementList.contains(mention.mentionSpan.toLowerCase())){
+						&& (replacementList.contains(mention.mentionSpan.toLowerCase())
+								|| root.contains(mention.mentionSpan))){
 					if(mention.mentionSpan.equalsIgnoreCase("her") || mention.mentionSpan.equalsIgnoreCase("his")){
 						root += "'s";
 					}
@@ -177,7 +185,7 @@ public class TextSimplification {
 
 		for (List<HasWord> sentence : dp) {
 			String sentenceString = Sentence.listToString(sentence);
-			sentenceList.add(sentenceString.toString());
+			sentenceList.add(sentenceString);
 		}
 
 		for (String sentence : sentenceList) 
