@@ -83,8 +83,8 @@ def print_output(relations):
         info[index][1] = format_tree(info[index][1])
         info[index][2] = format_tree(info[index][2])
         if re.search('[a-zA-Z]', info[index][0]) and re.search('[a-zA-Z]', info[index][1]) and re.search('[a-zA-Z]', info[index][2]):
-            print(info[index])
-            relations.append(info[index])
+            print([[info[index][0]], [info[index][1]], [info[index][2]]])
+            relations.append([[info[index][0]], [info[index][1]], [info[index][2]]])
     return relations
 
 
