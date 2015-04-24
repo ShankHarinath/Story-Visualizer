@@ -16,7 +16,7 @@ def main(input_file):
 
     os.system("cd Java/ && java -cp \"*:.\" TextSimplification " + os.path.abspath(input_file))
 
-    trees = read_parse_trees("trees.txt")
+    trees = read_parse_trees("Java/trees.txt")
     relations = []
 
     for tree in trees:
