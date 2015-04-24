@@ -25,18 +25,8 @@ def BifurcateInformation(element,elementName):
 					while element[i][1] == "I-PER": 
 						word = word +" "+element[i][0]
 						i+=1
-			if not PersonList:
-				PersonList.append(word)
-			
-			tempList = list(PersonList)
-			for per in PersonList:
-				if per in word:
-					PersonList.remove(per)
-					PersonList.append(word)
-				if word not in per:
-					PersonList.append(word)
-			elementMap["Person"] = PersonList
-		tempList=[]	
+			elementMap["Person"] = word
+		
 		if NERtag == "B-ORG" :
 			word = element[i][0]
 			if i < len(element) -2:
@@ -45,19 +35,11 @@ def BifurcateInformation(element,elementName):
 					while element[i][1] == "I-ORG": 
 						word = word +" "+element[i][0]
 						i+=1
-			if not OrganisationList:
-				OrganisationList.append(word)
+	
+			elementMap["Organisation"] = word
+		
 			
-			tempList = list(OrganisationList)
-			for org in OrganisationList:
-				if org in word:
-					OrganisationList.remove(org)
-					OrganisationList.append(word)
-				if word not in org:
-					OrganisationList.append(word)
-			elementMap["Organisation"] = OrganisationList
-			
-		tempList=[]	
+		
 		if NERtag == "B-LOC" :
 			word = element[i][0]
 			if i < len(element) -2:
@@ -66,27 +48,8 @@ def BifurcateInformation(element,elementName):
 					while element[i][1] == "I-LOC": 
 						word = word +" "+element[i][0]
 						i+=1
-			if not LocationList:
-				LocationList.append(word)
-			
-			tempList = list(LocationList)
-			for loc in LocationList:
-				if loc in word:
-					LocationList.remove(loc)
-					LocationList.append(word)
-				if word not in loc:
-					LocationList.append(word)
-			elementMap["Location"] = LocationList
-		tempList = []
-		'''
-		if NERtag == "O":
-			word = element[i][0]
-			i+=1
-			while i < len(element) -2 and element[i][1] == "O":
-				word = word +" "+element[i][0]
-				i+=1
-			elementMap[word] = "Other"
-		'''
+			elementMap["Location"] = word
+		
 			
 	
 	print(elementName)
@@ -100,24 +63,24 @@ def BifurcateInformation(element,elementName):
 				
 
 def GenerateSubjectRelationObject(lineWithTags,subject,action,object):
-	#subjectList = subject.split()
-	#actionList = action.split()
-	#objectList = object.split()
+	subjectList = subject[0].split()
+	actionList = action[0].split()
+	objectList = object[0].split()
 	
 	intermediateSubjectList = []
 	intermediateActionList = []
 	intermediateObjectList = []
 	
-	
 	for token in lineWithTags[2:len(lineWithTags)-2]:
-		if token[0] in subject:
+		
+		if token[0] in subjectList:
 			intermediateSubjectList.append([token[0],token[1]])
-		if token[0] in action:
+		if token[0] in actionList:
 			intermediateActionList.append([token[0],token[1]])
-		if token[0] in object:
+		if token[0] in objectList:
 			intermediateObjectList.append([token[0],token[1]])
 	
-		
+	
 	BifurcateInformation(intermediateSubjectList,"Subject")
 	BifurcateInformation(intermediateActionList,"Action")
 	BifurcateInformation(intermediateObjectList,"Object")
@@ -147,7 +110,6 @@ for relation in relations:
 
 	sentences1 = tokenize.sent_tokenize(sentence)
 	taggedLine = ner_tagger.tag(word_tokenize(str(sentences1)))
-	print(taggedLine)
 	GenerateSubjectRelationObject(taggedLine,subject,action,object)	
 
 	
