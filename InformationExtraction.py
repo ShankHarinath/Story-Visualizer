@@ -25,7 +25,10 @@ def BifurcateInformation(element,elementName):
 					while element[i][1] == "I-PER": 
 						word = word +" "+element[i][0]
 						i+=1
-			elementMap["Person"] = word
+						
+			if word not in PersonList:
+				PersonList.append(word)
+				
 		
 		if NERtag == "B-ORG" :
 			word = element[i][0]
@@ -36,7 +39,9 @@ def BifurcateInformation(element,elementName):
 						word = word +" "+element[i][0]
 						i+=1
 	
-			elementMap["Organisation"] = word
+			if word not in OrganisationList:
+				OrganisationList.append(word)
+				
 		
 			
 		
@@ -48,10 +53,14 @@ def BifurcateInformation(element,elementName):
 					while element[i][1] == "I-LOC": 
 						word = word +" "+element[i][0]
 						i+=1
-			elementMap["Location"] = word
+			if word not in LocationList:
+				LocationList.append(word)
+				
 		
 			
-	
+	elementMap["Person"] = PersonList
+	elementMap["Organisation"] = OrganisationList
+	elementMap["Location"] = LocationList
 	print(elementName)
 	print(elementMap)
 	elementMap.clear()
@@ -110,6 +119,10 @@ for relation in relations:
 
 	sentences1 = tokenize.sent_tokenize(sentence)
 	taggedLine = ner_tagger.tag(word_tokenize(str(sentences1)))
+	print(sentences1)
+	print(sentence)
+	print(taggedLine
+	)
 	GenerateSubjectRelationObject(taggedLine,subject,action,object)	
 
 	
