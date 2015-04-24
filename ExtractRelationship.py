@@ -14,8 +14,11 @@ def main(input_file):
     global info
     left = ""
 
-    os.system("cd Java/ && java -cp \"*:.\" TextSimplification " + os.path.abspath(input_file))
-
+    #os.system("cd Java/ && /usr/local/java/jdk1.8.0_20/bin/javac -cp \"*\" TextSimplification.java ")
+    #os.system("cd Java/ && /usr/local/java/jdk1.8.0_20/bin/java -cp \"*:.\" TextSimplification "+os.path.abspath(input_file))
+    os.system("cd Java/ && javac -cp \"*\" TextSimplification.java ")
+    os.system("cd Java/ && java -cp \"*:.\" TextSimplification "+os.path.abspath(input_file))
+    
     trees = read_parse_trees("Java/trees.txt")
     relations = []
 
@@ -27,7 +30,6 @@ def main(input_file):
 
             if str(tree[position]).startswith("(VP"):
                 left = get_left_part(tree,list(position))
-
                 #	relation = get_base_relation(tree,list(position))
                 get_right_part(tree,"",position,left)
                 positions = update_positions(positions)
@@ -35,7 +37,7 @@ def main(input_file):
                 positions.pop(0)
         relations = deepcopy(print_output(relations))
         info = []
-        # tree.draw()
+        tree.draw()
     cPickle.dump(relations, open('relations.txt', 'wb'))
 
 
@@ -61,7 +63,6 @@ def read_parse_trees(file_name):
 
 
 def format_tree(tree):
-    #print("Formatting : "+str(tree))
     tree = str(tree).split(")")
     sentence = []
     for token in tree:
@@ -76,6 +77,8 @@ def format_tree(tree):
 def print_output(relations):
     global info
     for index in range(len(info)):
+        if info[index][0] is None:
+            continue
         info[index][0] = format_tree(info[index][0])
         info[index][1] = format_tree(info[index][1])
         info[index][2] = format_tree(info[index][2])
