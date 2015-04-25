@@ -1,93 +1,782 @@
 (lp1
 (lp2
-S'Inkit'
-p3
-aS'works'
+(lp3
+S'It'
 p4
-aS'at USC'
-p5
-aa(lp6
-S'Inkit'
-p7
-aS'opened'
+aa(lp5
+S'was'
+p6
+aa(lp7
+S'her first day at Cedars International School'
 p8
-aS"Inkit 's bag and spread"
-p9
-aa(lp10
-S'Inkit'
+aaa(lp9
+(lp10
+S'Sheila Stevens'
 p11
-aS'opened'
-p12
-aS"out Inkit 's professional equipment"
+aa(lp12
+S'was'
 p13
 aa(lp14
-S"Inkit 's equipments"
+S'in the 2nd grade'
 p15
-aS'consisted'
-p16
-aS'of a dozen cowrie shells , a square piece of cloth'
-p17
-aa(lp18
-S"Inkit 's equipments"
-p19
-aS'consisted'
+aaa(lp16
+(lp17
+S'Sheila Stevens'
+p18
+aa(lp19
+S'missed'
 p20
-aS'with obscure mystic charts'
-p21
-aa(lp22
-S"Inkit 's equipments"
-p23
-aS'consisted'
-p24
-aS'on a square piece of cloth , a notebook , and a bundle of palmyra writing'
+aa(lp21
+S"Sheila Stevens 's old school"
+p22
+aaa(lp23
+(lp24
+S'Sheila Stevens'
 p25
 aa(lp26
-S"Inkit 's forehead"
+S'was'
 p27
-aS'was resplendent'
-p28
-aS'with sacred ash and vermilion'
+aa(lp28
+S'quite sure that Sheila Stevens was going to hate this new place'
 p29
-aa(lp30
-S"Inkit 's eyes"
-p31
-aS'sparkled'
+aaa(lp30
+(lp31
+S"Junie and Pam from Sheila Stevens 's class"
 p32
-aS'with a sharp , abnormal gleam'
-p33
-aa(lp34
-S"Inkit 's eyes"
-p35
-aS'sparkled'
+aa(lp33
+S'introduced'
+p34
+aa(lp35
+S'themselves'
 p36
-aS"which was really an outcome of a continual searching look for customers , but which Inkit 's simple clients took to be a prophetic light and felt comforted"
-p37
-aa(lp38
-S"The power of Inkit 's eyes"
+aaa(lp37
+(lp38
+S"Junie and Pam from Sheila Stevens 's class"
 p39
-aS'was considerably enhanced'
-p40
-aS"by customers position placed as customers were between the painted forehead and the dark whiskers which streamed down Inkit 's cheeks"
+aa(lp40
+S'introduced'
 p41
 aa(lp42
-S"a half-wit 's eyes"
+S"to Sheila Stevens 's"
 p43
-aS'sparkle'
-p44
-aS'in such a setting'
-p45
-aa(lp46
-S'one'
-p47
-aS'crown'
+aaa(lp44
+(lp45
+S'Pam'
+p46
+aa(lp47
+S'took'
 p48
-aS"the effect a half-wit 's wound a saffron colored turban around a half-wit 's"
-p49
-aa(lp50
-S"To crown the effect a half-wit 's wound a saffron colored turban around a half-wit 's"
-p51
-aS"'s"
-p52
-aS'head'
+aa(lp49
+S"Sheila Stevens 's to a tree that stood at the corner of the playground"
+p50
+aaa(lp51
+(lp52
+S'Pam'
 p53
-aa.
+aa(lp54
+S'asked Sheila'
+p55
+aa(lp56
+S"Stevens 's"
+p57
+aaa(lp58
+(lp59
+S'Pam'
+p60
+aa(lp61
+S'asked Sheila'
+p62
+aa(lp63
+S'Would you like to come to the Hole of Mysteries with us ?'
+p64
+aaa(lp65
+(lp66
+S'Sheila Stevens'
+p67
+aa(lp68
+S'asked astonished'
+p69
+aa(lp70
+S', `` Hole of Mysteries !'
+p71
+aaa(lp72
+(lp73
+S'This'
+p74
+aa(lp75
+S'is'
+p76
+aa(lp77
+S'the Hole of Mysteries'
+p78
+aaa(lp79
+(lp80
+S'Pam'
+p81
+aa(lp82
+S'said'
+p83
+aa(lp84
+S"Come on , let 's jump into the hole ''"
+p85
+aaa(lp86
+(lp87
+S'Pam , Sheila Stevens and Junie'
+p88
+aa(lp89
+S'jumped'
+p90
+aa(lp91
+S"inside holding each other 's hands"
+p92
+aaa(lp93
+(lp94
+S'The hole'
+p95
+aa(lp96
+S'became'
+p97
+aa(lp98
+S'darker'
+p99
+aaa(lp100
+(lp101
+S'The hole'
+p102
+aa(lp103
+S'became'
+p104
+aa(lp105
+S'as Pam went deeper and deeper'
+p106
+aaa(lp107
+(lp108
+S'it'
+p109
+aa(lp110
+S'became'
+p111
+aa(lp112
+S'bright'
+p113
+aaa(lp114
+(lp115
+S'Sheila Stevens'
+p116
+aa(lp117
+S'was'
+p118
+aa(lp119
+S'frightened'
+p120
+aaa(lp121
+(lp122
+S'Pam'
+p123
+aa(lp124
+S'laughed'
+p125
+aa(lp126
+S"seeing Sheila Stevens 's"
+p127
+aaa(lp128
+(lp129
+S'Junie'
+p130
+aa(lp131
+S'pointed'
+p132
+aa(lp133
+S'out'
+p134
+aaa(lp135
+(lp136
+S'Junie'
+p137
+aa(lp138
+S'pointed'
+p139
+aa(lp140
+S'to a rabbit'
+p141
+aaa(lp142
+(lp143
+S'Junie'
+p144
+aa(lp145
+S'pointed'
+p146
+aa(lp147
+S'lighting a candle'
+p148
+aaa(lp149
+(lp150
+S'That'
+p151
+aa(lp152
+S'is Binkie'
+p153
+aa(lp154
+S'the rabbit'
+p155
+aaa(lp156
+(lp157
+S'Pam'
+p158
+aa(lp159
+S'plans'
+p160
+aa(lp161
+S'all our adventures'
+p162
+aaa(lp163
+(lp164
+S'Junie'
+p165
+aa(lp166
+S'said'
+p167
+aa(lp168
+S"hi Binkie the rabbit '' ! ''"
+p169
+aaa(lp170
+(lp171
+S'This'
+p172
+aa(lp173
+S'is'
+p174
+aa(lp175
+S'Sheila Stevens'
+p176
+aaa(lp177
+(lp178
+S'Do us today in the mysterious school'
+p179
+aa(lp180
+S'have'
+p181
+aa(lp182
+S'a mysterious adventure for us today in the mysterious school'
+p183
+aaa(lp184
+(lp185
+S"Girls , Binkie the rabbit '' only"
+p186
+aa(lp187
+S'have'
+p188
+aa(lp189
+S'a tiny adventure for you'
+p190
+aaa(lp191
+(lp192
+S'It'
+p193
+aa(lp194
+S"'s not"
+p195
+aa(lp196
+S'easy'
+p197
+aaa(lp198
+(lp199
+S'It'
+p200
+aa(lp201
+S"'s not"
+p202
+aa(lp203
+S'mind you'
+p204
+aaa(lp205
+(lp206
+S'You'
+p207
+aa(lp208
+S'have'
+p209
+aa(lp210
+S"to be very alert as it 's to do with sounds"
+p211
+aaa(lp212
+(lp213
+S'Now'
+p214
+aa(lp215
+S'follow'
+p216
+aa(lp217
+S'me'
+p218
+aaa(lp219
+(lp220
+S'You'
+p221
+aa(lp222
+S'have'
+p223
+aa(lp224
+S'to find you way out'
+p225
+aaa(lp226
+(lp227
+S'The girls'
+p228
+aa(lp229
+S'followed'
+p230
+aa(lp231
+S"The girls 's"
+p232
+aaa(lp233
+(lp234
+S'you'
+p235
+aa(lp236
+S'came'
+p237
+aa(lp238
+S'to a small room'
+p239
+aaa(lp240
+(lp241
+S'There'
+p242
+aa(lp243
+S'were'
+p244
+aa(lp245
+S'The three animals in the room : a cat , a dog and a fish -LRB- inside a bowl -RRB-'
+p246
+aaa(lp247
+(lp248
+S'a cat , a dog and a fish'
+p249
+aa(lp250
+S'hear'
+p251
+aa(lp252
+S'loud grunts'
+p253
+aaa(lp254
+(lp255
+S'a cat , a dog and a fish'
+p256
+aa(lp257
+S'hear'
+p258
+aa(lp259
+S'from outside'
+p260
+aaa(lp261
+(lp262
+S'Sheila Stevens'
+p263
+aa(lp264
+S'said'
+p265
+aa(lp266
+S"Sheila Stevens think there 's a monster nearby"
+p267
+aaa(lp268
+(lp269
+S'a cat , a dog and a fish'
+p270
+aa(lp271
+S'have'
+p272
+aa(lp273
+S'to take the help of these animals'
+p274
+aaa(lp275
+(lp276
+S'a cat , a dog and a fish'
+p277
+aa(lp278
+S'have'
+p279
+aa(lp280
+S'to get out'
+p281
+aaa(lp282
+(lp283
+S'else we'
+p284
+aa(lp285
+S'have'
+p286
+aa(lp287
+S'to stay here for ever'
+p288
+aaa(lp289
+(lp290
+S'a cat , a dog and a fish'
+p291
+aa(lp292
+S'find'
+p293
+aa(lp294
+S'your way way'
+p295
+aaa(lp296
+(lp297
+S'a cat , a dog and a fish'
+p298
+aa(lp299
+S'find'
+p300
+aa(lp301
+S'out'
+p302
+aaa(lp303
+(lp304
+S'Pam'
+p305
+aa(lp306
+S'said'
+p307
+aa(lp308
+S'Pam think Pam know'
+p309
+aaa(lp310
+(lp311
+S'Pam'
+p312
+aa(lp313
+S'think'
+p314
+aa(lp315
+S'one of these animals can talk'
+p316
+aaa(lp317
+(lp318
+S"Let 's"
+p319
+aa(lp320
+S'find'
+p321
+aa(lp322
+S'out'
+p323
+aaa(lp324
+(lp325
+S'The cat'
+p326
+aa(lp327
+S'was shaking'
+p328
+aa(lp329
+S'its head'
+p330
+aaa(lp331
+(lp332
+S'The cat'
+p333
+aa(lp334
+S'was'
+p335
+aa(lp336
+S'and'
+p337
+aaa(lp338
+(lp339
+S'The cat'
+p340
+aa(lp341
+S'was scratching'
+p342
+aa(lp343
+S'itself'
+p344
+aaa(lp345
+(lp346
+S'The fish'
+p347
+aa(lp348
+S'was waving'
+p349
+aa(lp350
+S'its tail'
+p351
+aaa(lp352
+(lp353
+S'the dog'
+p354
+aa(lp355
+S'was thumping'
+p356
+aa(lp357
+S'its tail'
+p358
+aaa(lp359
+(lp360
+S'Pam'
+p361
+aa(lp362
+S'feel'
+p363
+aa(lp364
+S'it must be either the dog or the fish'
+p365
+aaa(lp366
+(lp367
+S"Let 's"
+p368
+aa(lp369
+S'find'
+p370
+aa(lp371
+S'out'
+p372
+aaa(lp373
+(lp374
+S'Pam'
+p375
+aa(lp376
+S'went'
+p377
+aa(lp378
+S'up'
+p379
+aaa(lp380
+(lp381
+S'Pam'
+p382
+aa(lp383
+S'went'
+p384
+aa(lp385
+S'to the fish'
+p386
+aaa(lp387
+(lp388
+S'Pam'
+p389
+aa(lp390
+S'said'
+p391
+aa(lp392
+S'Can Pam help either the dog or the fish'
+p393
+aaa(lp394
+(lp395
+S'The fish'
+p396
+aa(lp397
+S'did not seem'
+p398
+aa(lp399
+S"to have heard a dog 's and continued to wave its tail in the water"
+p400
+aaa(lp401
+(lp402
+S'you'
+p403
+aa(lp404
+S'are looking'
+p405
+aa(lp406
+S'for the exit'
+p407
+aaa(lp408
+(lp409
+S'Spike'
+p410
+aa(lp411
+S'help'
+p412
+aa(lp413
+S'you'
+p414
+aaa(lp415
+(lp416
+S'the girls'
+p417
+aa(lp418
+S'asked'
+p419
+aa(lp420
+S'the dog'
+p421
+aaa(lp422
+(lp423
+S'Now'
+p424
+aa(lp425
+S'press'
+p426
+aa(lp427
+S"hard against the door and chant ` Ashanti '"
+p428
+aaa(lp429
+(lp430
+S'Now'
+p431
+aa(lp432
+S'press'
+p433
+aa(lp434
+S'The three times'
+p435
+aaa(lp436
+(lp437
+S'When the door opens'
+p438
+aa(lp439
+S'run fast'
+p440
+aa(lp441
+S'until The girls reach the top'
+p442
+aaa(lp443
+(lp444
+S'The three'
+p445
+aa(lp446
+S'thanked'
+p447
+aa(lp448
+S'the dog'
+p449
+aaa(lp450
+(lp451
+S'they'
+p452
+aa(lp453
+S'chanted'
+p454
+aa(lp455
+S"Ashanti ' thrice"
+p456
+aaa(lp457
+(lp458
+S'the grunting sounds'
+p459
+aa(lp460
+S'grew louder'
+p461
+aa(lp462
+S'frightening the girls'
+p463
+aaa(lp464
+(lp465
+S'They'
+p466
+aa(lp467
+S'ran'
+p468
+aa(lp469
+S'up'
+p470
+aaa(lp471
+(lp472
+S'They'
+p473
+aa(lp474
+S'ran'
+p475
+aa(lp476
+S'the dark path'
+p477
+aaa(lp478
+(lp479
+S'They'
+p480
+aa(lp481
+S'ran'
+p482
+aa(lp483
+S'stopping only when they reached up , at the beginning of the tunnel'
+p484
+aaa(lp485
+(lp486
+S'they'
+p487
+aa(lp488
+S'made'
+p489
+aa(lp490
+S'it'
+p491
+aaa(lp492
+(lp493
+S'shouted Pam in excitement as they'
+p494
+aa(lp495
+S'found'
+p496
+aa(lp497
+S'back'
+p498
+aaa(lp499
+(lp500
+S'shouted Pam in excitement as they'
+p501
+aa(lp502
+S'found'
+p503
+aa(lp504
+S'themselves'
+p505
+aaa(lp506
+(lp507
+S'shouted Pam in excitement as they'
+p508
+aa(lp509
+S'found'
+p510
+aa(lp511
+S'in the mysterious school playground'
+p512
+aaa(lp513
+(lp514
+S'They'
+p515
+aa(lp516
+S'are'
+p517
+aa(lp518
+S'in there'
+p519
+aaa(lp520
+(lp521
+S'They'
+p522
+aa(lp523
+S'are'
+p524
+aa(lp525
+S"perhaps helping Binkie the rabbit '' plan our next adventure"
+p526
+aaa(lp527
+(lp528
+S'Sheila Stevens'
+p529
+aa(lp530
+S'think'
+p531
+aa(lp532
+S"Sheila Stevens 'm going to have a great time at Cedars"
+p533
+aaa(lp534
+(lp535
+S'the trio'
+p536
+aa(lp537
+S'returned'
+p538
+aa(lp539
+S'to their class'
+p540
+aaa(lp541
+(lp542
+S'the trio'
+p543
+aa(lp544
+S'returned'
+p545
+aa(lp546
+S'in the mysterious school'
+p547
+aaa.
