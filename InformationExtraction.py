@@ -13,76 +13,7 @@ subject_map = dict()
 relation_map = dict()
 object_map = dict()
 
-
-#utility function 
-
-def person_person_relation():
-    if len(subject_map["person"]) != 0:
-        print subject_map["person"]
-    else:
-        print "Sorry no person relations in subject"
-    if len(object_map["person"]) != 0:
-        print object_map["person"]
-    else:    
-        print "Sorry no person relation in object"
-        
-    print "****************************"
-    
-    
-
-def person_any_relation():
-    if len(subject_map["person"]) != 0:
-        print subject_map["person"]
-    else:
-        print "Sorry no person relations in subject"
-
-    print object_map["person"]
-        
-    print "****************************"
-    
-
-def any_person_relation():
-    
-    print subject_map["person"]
-    
-    if len(object_map["person"]) != 0:
-        print object_map["person"]
-    else:    
-        print "Sorry no person relation in object"
-        
-    print "****************************"
-    
-
-
-def organization_organization_relation():
-    if len(subject_map["organization"]) != 0:
-        print subject_map["organization"]
-    else:
-        print "Sorry no organization relations in subject"
-    if len(object_map["person"]) != 0:
-        print object_map["organization"]
-    else:    
-        print "Sorry no organization relation in object"
-        
-    print "****************************"
-    
-
-def location_location_relation():
-    if len(subject_map["location"]) != 0:
-        print subject_map["location"]
-    else:
-        print "Sorry no location relations in subject"
-    if len(object_map["location"]) != 0:
-        print object_map["location"]
-    else:    
-        print "Sorry no location relation in object"
-        
-    print "****************************"
-    
-
-#end of ulility functions
-
-
+summary_lines = []
 def extract_list_by_tag(elements,element_name,NERtag):
     list1 = []
     NERList = set()
@@ -107,32 +38,43 @@ def extract_list_by_tag(elements,element_name,NERtag):
     return NERList
             
     
-def extract_ner(elements, element_name):
+def extract_ner(elements, element_name,relation):
     
-    element_map = dict()
-    person = set()
-    organization = set()
-    location = set()
+    if relation == "ANY" or relation == "":
+        element_map = dict()
+        person = set()
+        organization = set()
+        location = set()
 
-    person = extract_list_by_tag(elements,element_name,"PERSON")
-    organization = extract_list_by_tag(elements,element_name,"ORGANIZATION")
-    location = extract_list_by_tag(elements,element_name,"LOCATION")
+        person = extract_list_by_tag(elements,element_name,"PERSON")
+        organization = extract_list_by_tag(elements,element_name,"ORGANIZATION")
+        location = extract_list_by_tag(elements,element_name,"LOCATION")
+        
+        element_map["person"] = person
+        element_map["organization"] = organization
+        element_map["location"] = location
+        #print(element_name)
+        #print(element_map)
+        return element_map
+    else:
+        element_map = dict()
+        getRelation1 = set()
+        getRelation2 = set()
+        
+        getRelation1 = extract_list_by_tag(elements,element_name,relation)
+        #getRelation2 = extract_list_by_tag(elements,element_name,relation2)
+        if len(getRelation1) != 0:
+            element_map[relation] = getRelation1
+        #element_map[relation2] = getRelation
+        return element_map
 
-    
 
-    element_map["person"] = person
-    element_map["organization"] = organization
-    element_map["location"] = location
-    #print(element_name)
-    #print(element_map)
-    return element_map
-
-
-def extract_relation_info(line_with_tags, subject, action, object):
+def extract_relation_info(line_with_tags, subject, action, object,relation1,relation2):
 
     global subject_map
     global relation_map
     global object_map
+    global summary_lines
     
     subject_list = subject.split()
     action_list = action.split()
@@ -141,7 +83,12 @@ def extract_relation_info(line_with_tags, subject, action, object):
     intermediate_subject_list = list()
     intermediate_action_list = list()
     intermediate_object_list = list()
-
+    
+    subject_map = dict()
+    relation_map = dict()
+    object_map = dict()
+    
+    
     for token in line_with_tags:
         if token[0] in subject_list and [token[0], token[1]] not in intermediate_subject_list:
             intermediate_subject_list.append([token[0], token[1]])
@@ -149,25 +96,29 @@ def extract_relation_info(line_with_tags, subject, action, object):
             intermediate_action_list.append([token[0], token[1]])
         if token[0] in object_list and [token[0], token[1]] not in intermediate_object_list:
             intermediate_object_list.append([token[0], token[1]])
+    
+    subject_map = extract_ner(intermediate_subject_list, "Subject","ANY")
+    relation_map = extract_ner(intermediate_action_list, "Action","ANY")
+    object_map = extract_ner(intermediate_object_list, "Object","ANY")
+    if relation1 == "" and relation2=="":
+        summary_lines.append(line_with_tags)
+    else:
+        if len(subject_map) != 0 and len(object_map) != 0:
+            #summary_lines.append(line_with_tags)
+            print(line_with_tags)
+            print("Subject")
+            print(subject_map)
+            print("Action")
+            print(relation_map)
+            print("Object")
+            print(object_map)
+            print("*******************************")
+           
+        
 
-    subject_map = extract_ner(intermediate_subject_list, "Subject")
-    relation_map = extract_ner(intermediate_action_list, "Action")
-    object_map = extract_ner(intermediate_object_list, "Object")
-    '''
-    print("Subject")
-    print(subject_map)
-    print("Relation")
-    print(relation_map)
-    print("Object")
-    print(object_map)
-    print("*******************************")
-    '''
+def get_relation(relation,relation1,relation2):
+    ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
 
-
-relations = pickle.load(open("relations.txt", "rb"))
-ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
-
-for relation in relations:
     sub = relation[0][0]
     actn = relation[1][0]
     obj = relation[2][0]
@@ -175,10 +126,33 @@ for relation in relations:
     sentence = relation[0][0] + " " + relation[1][0] + " " + relation[2][0]
 
     taggedLine = ner_tagger.tag(word_tokenize(sentence))[0]
-    #print(taggedLine)
+    extract_relation_info(taggedLine, sub, actn, obj,relation1,relation2)
+       
+       
 
-    extract_relation_info(taggedLine, sub, actn, obj)
-    #utility_function = sys.argv[2]
-    person_person_relation()
-    
+def single_relation(relation):
+
+    ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
+
    
+    sub = relation[0][0]
+    actn = relation[1][0]
+    obj = relation[2][0]
+
+    sentence = relation[0][0] + " " + relation[1][0] + " " + relation[2][0]
+
+    taggedLine = ner_tagger.tag(word_tokenize(sentence))[0]
+    extract_relation_info(taggedLine, sub, actn, obj,"","")
+        
+
+relations = pickle.load(open("relations.txt", "rb"))
+#ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
+print("Single relation SRO -------- >")
+single_relation([["Junie and Pam from Sheila 's class"], ['introduced'], ['themselves']])
+print(summary_lines)
+summary_lines=[]
+print("**************************")
+print(str(sys.argv[1]) +" to "+str(sys.argv[2])+" relation ------------>")
+for relation in relations:
+    get_relation(relation,str(sys.argv[1]),str(sys.argv[2]))
+print(summary_lines)
