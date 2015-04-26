@@ -53,8 +53,6 @@ def extract_ner(elements, element_name,relation):
         element_map["person"] = person
         element_map["organization"] = organization
         element_map["location"] = location
-        #print(element_name)
-        #print(element_map)
         return element_map
     else:
         element_map = dict()
@@ -104,49 +102,29 @@ def extract_relation_info(line_with_tags, subject, action, object,relation1,rela
         summary_lines.append(line_with_tags)
     else:
         if len(subject_map) != 0 and len(object_map) != 0:
-            #summary_lines.append(line_with_tags)
-            print(line_with_tags)
-            print("Subject")
-            print(subject_map)
-            print("Action")
-            print(relation_map)
-            print("Object")
-            print(object_map)
-            print("*******************************")
+            summary_lines.append(line_with_tags)
            
-        
-
-def get_relation(relation,relation1,relation2):
+def multiple_relation(relation,relation1,relation2):
     ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
-
     sub = relation[0][0]
     actn = relation[1][0]
     obj = relation[2][0]
-
     sentence = relation[0][0] + " " + relation[1][0] + " " + relation[2][0]
-
     taggedLine = ner_tagger.tag(word_tokenize(sentence))[0]
     extract_relation_info(taggedLine, sub, actn, obj,relation1,relation2)
        
-       
-
 def single_relation(relation):
 
     ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
-
-   
     sub = relation[0][0]
     actn = relation[1][0]
     obj = relation[2][0]
-
     sentence = relation[0][0] + " " + relation[1][0] + " " + relation[2][0]
-
     taggedLine = ner_tagger.tag(word_tokenize(sentence))[0]
     extract_relation_info(taggedLine, sub, actn, obj,"","")
         
-
+'''
 relations = pickle.load(open("relations.txt", "rb"))
-#ner_tagger = NERTagger('Java/english.muc.7class.nodistsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
 print("Single relation SRO -------- >")
 single_relation([["Junie and Pam from Sheila 's class"], ['introduced'], ['themselves']])
 print(summary_lines)
@@ -154,5 +132,6 @@ summary_lines=[]
 print("**************************")
 print(str(sys.argv[1]) +" to "+str(sys.argv[2])+" relation ------------>")
 for relation in relations:
-    get_relation(relation,str(sys.argv[1]),str(sys.argv[2]))
+    multiple_relation(relation,str(sys.argv[1]),str(sys.argv[2]))
 print(summary_lines)
+'''
