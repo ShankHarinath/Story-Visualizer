@@ -15,11 +15,11 @@ class InfoExtractor:
         list1 = []
         ner_List = set()
         for i, element in enumerate(elements):
-            ner_tag = element[1]
-            if ner_tag == ner_tag:
+            ner = element[1]
+            if ner_tag in ner:
                 word = element[0]
                 i += 1
-                while i < len(elements) - 2 and elements[i][1] == ner_tag:
+                while i < len(elements) - 2 and ner_tag in elements[i][1]:
                     word = word + " " + elements[i][0]
                     i += 1
 
@@ -35,47 +35,29 @@ class InfoExtractor:
 
 
     @staticmethod
-    def extract_ner(elements, element_name, relation):
-        if relation == "ANY" or relation is None:
-            element_map = dict()
-            person = InfoExtractor.extract_list_by_tag(elements, element_name, "PERSON")
-            organization = InfoExtractor.extract_list_by_tag(elements, element_name, "ORGANIZATION")
-            location = InfoExtractor.extract_list_by_tag(elements, element_name, "LOCATION")
+    def extract_ner(elements, element_name):
+        element_map = dict()
+        person = InfoExtractor.extract_list_by_tag(elements, element_name, "PER")
+        person.update(InfoExtractor.extract_list_by_tag(elements, element_name, "MISC"))
+        organization = InfoExtractor.extract_list_by_tag(elements, element_name, "ORG")
+        location = InfoExtractor.extract_list_by_tag(elements, element_name, "LOC")
 
-            element_map["person"] = person
-            element_map["organization"] = organization
-            element_map["location"] = location
-            return element_map
-        else:
-            element_map = dict()
-            get_relation = InfoExtractor.extract_list_by_tag(elements, element_name, relation)
-            if len(get_relation) != 0:
-                element_map[relation] = get_relation
-            return element_map
+        element_map["person"] = person
+        element_map["organization"] = organization
+        element_map["location"] = location
+        return element_map
 
 
     @staticmethod
     def extract_relation_breakdown(line_with_tags, subject, action, object, filter1, filter2):
-        subject_list = subject.split()
-        action_list = action.split()
-        object_list = object.split()
-
-        intermediate_subject_list = list()
-        intermediate_action_list = list()
-        intermediate_object_list = list()
-
-        for token in line_with_tags:
-            if token[0] in subject_list and [token[0], token[1]] not in intermediate_subject_list:
-                intermediate_subject_list.append([token[0], token[1]])
-            if token[0] in action_list and [token[0], token[1]] not in intermediate_action_list:
-                intermediate_action_list.append([token[0], token[1]])
-            if token[0] in object_list and [token[0], token[1]] not in intermediate_object_list:
-                intermediate_object_list.append([token[0], token[1]])
+        intermediate_subject_list = line_with_tags[0:len(subject.split())]
+        intermediate_action_list = line_with_tags[len(subject.split()):len(subject.split())+len(action.split())]
+        intermediate_object_list = line_with_tags[len(subject.split())+len(action.split()):]
 
         if filter1 is None and filter2 is None:
-            subject_map = InfoExtractor.extract_ner(intermediate_subject_list, "Subject", filter1)
-            relation_map = InfoExtractor.extract_ner(intermediate_action_list, "Action", "")
-            object_map = InfoExtractor.extract_ner(intermediate_object_list, "Object", filter2)
+            subject_map = InfoExtractor.extract_ner(intermediate_subject_list, "Subject")
+            relation_map = InfoExtractor.extract_ner(intermediate_action_list, "Action")
+            object_map = InfoExtractor.extract_ner(intermediate_object_list, "Object")
             return [subject_map, relation_map, object_map]
         else:
             tags = ([tag[1] for tag in intermediate_subject_list])
@@ -95,8 +77,8 @@ class InfoExtractor:
             actn = relation[1][0]
             obj = relation[2][0]
             sentence = relation[0][0] + " " + relation[1][0] + " " + relation[2][0]
-            tagged_line = ner_tagger.tag(word_tokenize(sentence))[0]
-            print(tagged_line)
+            tagged_line = ner_tagger.tag(word_tokenize(sentence))
+
             if InfoExtractor.extract_relation_breakdown(tagged_line, sub, actn, obj, filter1, filter2):
                 filtered_list.append(relation)
         return filtered_list
@@ -108,7 +90,8 @@ class InfoExtractor:
         actn = relation[1][0]
         obj = relation[2][0]
         sentence = relation[0][0] + " " + relation[1][0] + " " + relation[2][0]
-        tagged_line = ner_tagger.tag(word_tokenize(sentence))[0]
+        tagged_line = ner_tagger.tag(word_tokenize(sentence))
+
         return InfoExtractor.extract_relation_breakdown(tagged_line, sub, actn, obj, None, None)
 
 if __name__ == "__main__":
