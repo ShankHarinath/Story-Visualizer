@@ -42429,6 +42429,7 @@ zurek
 zurn
 zuroff
 zutaut
+zazu
 zvyagintsev
 zwane
 zweifach
@@ -42442,4 +42443,10 @@ zych
 zyl
 zyskowski
 zyuganov
-zyuzin
+rafiki
+mufasa
+simba
+scar
+shenzi
+banzai
+ed
