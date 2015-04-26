@@ -129,13 +129,6 @@ public class TextSimplification {
 		});
 
 		recordsOrdered.build().asMap().forEach((sentNum, mentionList) -> {
-			//			Stream<Pair<CorefChain, CorefMention>> list = mentionList.stream().sorted(new Comparator<Pair<CorefChain, CorefMention>>() {
-			//				@Override
-			//				public int compare(Pair<CorefChain, CorefMention> o1,
-			//						Pair<CorefChain, CorefMention> o2) {
-			//					return o1.getRight().startIndex - o2.getRight().startIndex;
-			//				}
-			//			});
 			CoreMap sentence = stnfrdSentences.get(sentNum-1);
 			List<CoreLabel> stnfrdtokens = sentence.get(TokensAnnotation.class);
 
@@ -145,6 +138,7 @@ public class TextSimplification {
 				String root = chain.getRepresentativeMention().mentionSpan;
 
 				if(!mention.mentionSpan.equalsIgnoreCase(root) 
+						&& (root.split("\\s").length < 3)
 						&& (replacementList.contains(mention.mentionSpan.toLowerCase())
 								|| root.contains(mention.mentionSpan))){
 					if(mention.mentionSpan.equalsIgnoreCase("her") || mention.mentionSpan.equalsIgnoreCase("his")){

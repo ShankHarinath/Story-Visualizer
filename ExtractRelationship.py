@@ -37,7 +37,7 @@ def main(input_file):
                 positions.pop(0)
         relations = deepcopy(print_output(relations))
         info = []
-        tree.draw()
+        # tree.draw()
     cPickle.dump(relations, open('relations.txt', 'wb'))
 
 
