@@ -138,9 +138,10 @@ public class TextSimplification {
 				String root = chain.getRepresentativeMention().mentionSpan;
 
 				if(!mention.mentionSpan.equalsIgnoreCase(root) 
+						&& (!root.contains(mention.mentionSpan) && !mention.mentionSpan.contains(root))
+						&& (!replacementList.contains(root.toLowerCase()))
 						&& (root.split("\\s").length < 3)
-						&& (replacementList.contains(mention.mentionSpan.toLowerCase())
-								|| root.contains(mention.mentionSpan))){
+						&& (replacementList.contains(mention.mentionSpan.toLowerCase()))){
 					if(mention.mentionSpan.equalsIgnoreCase("her") || mention.mentionSpan.equalsIgnoreCase("his")){
 						root += "'s";
 					}

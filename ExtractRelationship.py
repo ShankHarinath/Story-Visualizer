@@ -7,16 +7,20 @@ from nltk.tag.stanford import NERTagger
 import pickle
 import sys
 from nltk.tag import *
+from nltk import *
+from collections import *
 from InformationExtraction import InfoExtractor
+import json
 
 info = []
+characters = set()
 
 
 def extract_relations(input_file):
     global info
 
     # os.system("cd Java/ && /usr/local/java/jdk1.8.0_20/bin/javac -cp \"*\" TextSimplification.java ")
-    #os.system("cd Java/ && /usr/local/java/jdk1.8.0_20/bin/java -cp \"*:.\" TextSimplification "+os.path.abspath(input_file))
+    # os.system("cd Java/ && /usr/local/java/jdk1.8.0_20/bin/java -cp \"*:.\" TextSimplification "+os.path.abspath(input_file))
     os.system("cd Java/ && javac -cp \"*\" TextSimplification.java ")
     os.system("cd Java/ && java -cp \"*:.\" TextSimplification " + os.path.abspath(input_file))
 
@@ -25,7 +29,7 @@ def extract_relations(input_file):
 
     for tree in trees:
         positions = tree.treepositions()
-        #positions = level_wise_sort(positions,[0])
+        # positions = level_wise_sort(positions,[0])
         while len(positions) != 0:
             position = list(positions[0])
 
@@ -84,9 +88,9 @@ def print_output(relations):
         info[index][0] = format_tree(info[index][0])
         info[index][1] = format_tree(info[index][1])
         info[index][2] = format_tree(info[index][2])
-        if re.search('[a-zA-Z]', info[index][0]) and re.search('[a-zA-Z]', info[index][1]) and re.search('[a-zA-Z]',
-                                                                                                         info[index][
-                                                                                                             2]):
+        if re.search('[a-zA-Z]', info[index][0]) and re.search('[a-zA-Z]',
+                                                               info[index][1]) and re.search('[a-zA-Z]',
+                                                                                             info[index][2]):
             print([[info[index][0]], [info[index][1]], [info[index][2]]])
             relations.append([[info[index][0]], [info[index][1]], [info[index][2]]])
     return relations
@@ -111,14 +115,10 @@ def get_right_part(tree, relation, root, left):
         elif str(tree[position]).startswith("(VP") and not str(tree[position]).startswith("(VB"):
             get_right_part(tree, relation, position, left)
         else:
-            # print(relation)
-            # print(tree[position])
-            # print("\n\n")
             info.append([left, relation, tree[position]])
 
 
 def get_left_part(tree, position):
-    # LEFT
     position = list(position)
     if position[-1] > 0:
         position[-1] -= 1
@@ -126,7 +126,6 @@ def get_left_part(tree, position):
 
 
 def get_base_relation(tree, position):
-    # RELATION
     return tree[tuple(position + [0])]
 
 
@@ -151,28 +150,121 @@ def level_wise_sort(positions, root):
     return positions
 
 
+def get_family_rel(sentence, relation):
+    tagged_sent = ""
+    for tag in sentence:
+        tagged_sent += tuple2str(tag) + " "
+
+    ner = tagged_sent.split(relation)
+
+    if len(ner) < 2:
+        return
+
+    ner1 = ner2 = ""
+
+    for idx, word in enumerate(reversed(word_tokenize(ner[0]))):
+        wtag = str(word).split("/")
+        if len(wtag) > 1 and wtag[1] == "NNP":
+            ner1 = wtag[0]
+            characters.add(ner1)
+            if idx + 1 < len(word_tokenize(ner[0])[::-1]) and "/" in word_tokenize(ner[0])[::-1][idx + 1] and \
+                            str(word_tokenize(ner[0])[::-1][idx + 1]).split("/")[1] == "NNP":
+                ner1 = str(word_tokenize(ner[0])[::-1][idx + 1]).split("/")[0] + " " + ner1
+                characters.add(ner1)
+            break
+
+    for idx, word in enumerate(word_tokenize(ner[1])[1:]):
+        wtag = str(word).split("/")
+        if len(wtag) > 1 and wtag[1] == "NNP":
+            ner2 = wtag[0]
+            characters.add(ner2)
+            if idx + 1 < len(word_tokenize(ner[1])[1:]) and "/" in word_tokenize(ner[1])[1:][idx + 1] and \
+                            word_tokenize(ner[1])[1:][idx + 1].split("/")[1] == "NNP":
+                ner2 += " " + str(word_tokenize(ner[1])[1:][idx + 1]).split("/")[0]
+                characters.add(ner2)
+            break
+
+    if str(word_tokenize(ner[0])[-1]).split("/")[0] == "'s":
+        rel = ner1 + " -> " + relation + " -> " + ner2
+    else:
+        rel = ner2 + " -> " + relation + " -> " + ner1
+
+    if not ner1 or not ner2:
+        return
+    return rel
+
+
 if __name__ == "__main__":
 
     family_list = ["father", "mother", "brother", "sister", "uncle", "aunt", "grandmother", "grandfather",
                    "great grandmother", "great grandfather", "dad", "mom", "pappa", "mamma", "grandma", "grandpa",
                    "grand son", "grand daughter", "daughter", "son", "nephew", "cousin", "niece", "friend", "mate",
-                   "wife", "husband", "newborn", "sibling", "offspring"]
+                   "wife", "husband", "newborn", "sibling", "offspring", "stepmother", "stepmom", "stepfather",
+                   "stepdad", "friends", "sisters", "brothers", "daughters", "sons", "cousins", "mates", "siblings",
+                   "offsprings", "raises", "fellow", "parents", "parent", "peers"]
 
-    # ner_tagger = NERTagger('Java/english.all.3class.distsim.crf.ser.gz', 'Java/stanford-ner-3.5.2.jar')
+    location_list = ["went", "came", "gone", "from", "go", "been", "visited"]
+
     ner_tagger = SennaNERTagger('/usr/share/senna-v3.0')
-    relations = extract_relations(sys.argv[1])
-    # relations = pickle.load(open("relations.txt", "rb"))
+    tagger = SennaTagger('/usr/share/senna-v3.0')
+    # relations = extract_relations(sys.argv[1])
+    relations = pickle.load(open("relations.txt", "rb"))
 
-    # filtered_list = InfoExtractor.filter_relations(relations, "PERSON", "PERSON", ner_tagger)
-
-    family_relations = list()
+    family_relations = set()
+    output = dict()
 
     for relation in relations:
         words = str(relation[0][0]).split() + str(relation[1][0]).split() + str(relation[2][0]).split()
-        if "Theo" in str(words):
-            for word in words:
-                if str(word).lower() in family_list:
-                    print(word)
-                    [sub, rel, obj] = InfoExtractor.get_relation_entities(relation, ner_tagger)
-                    print(str(sub["person"]) + " " + str(obj["person"]))
-                    print("*"*10)
+        sent = str(relation[0][0]) + " " + str(relation[1][0]) + " " + str(relation[2][0])
+
+        for word in words:
+            if str(word).lower() in family_list:
+                val = get_family_rel(tagger.tag(word_tokenize(sent)), word)
+                if val is not None:
+                    family_relations.add(val)
+
+    print()
+    print("Family Relations:")
+    print()
+    for r in family_relations:
+        print(r)
+
+    output["family_rel"] = list(family_relations)
+
+    influence = Counter()
+    char_rel = defaultdict(list)
+    total = 0
+    for relation in relations:
+        words = str(relation[0][0]).split() + str(relation[1][0]).split() + str(relation[2][0]).split()
+
+        for word in words:
+            if str(word) in characters:
+                char_rel[word].append(relation)
+                influence[word] += 1
+                total += 1
+
+    print()
+    print("Character Influence")
+    print()
+    for character in OrderedDict(sorted(influence.items(), key=itemgetter(1), reverse=True)):
+        influence[character] /= total * 0.01
+        print(character + " -> " + str(influence[character]) + " %")
+
+    output["char_infl"] = dict(influence)
+    output["chars"] = list(influence.keys())
+    output["char_rel"] = dict(char_rel)
+
+    js_res = {val: output[val] for val in output}
+
+    print()
+    print("Character Relations")
+    print()
+    for character in char_rel:
+        print()
+        print(character + " -> ")
+        print()
+        for rel in char_rel[character]:
+            print(rel)
+
+    with open('result.json', 'w') as fp:
+        json.dump(js_res, fp)
