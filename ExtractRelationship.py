@@ -201,14 +201,16 @@ if __name__ == "__main__":
                    "grand son", "grand daughter", "daughter", "son", "nephew", "cousin", "niece", "friend", "mate",
                    "wife", "husband", "newborn", "sibling", "offspring", "stepmother", "stepmom", "stepfather",
                    "stepdad", "friends", "sisters", "brothers", "daughters", "sons", "cousins", "mates", "siblings",
-                   "offsprings", "raises", "fellow", "parents", "parent", "peers"]
+                   "offsprings", "raises", "fellow", "parents", "parent", "peers", "ex-wife", "ex-husband", "love",
+                   "roommate", "child", "children", "brother-in-law", "sister-in-law", "son-in-law", "daughter-in-law",
+                   "relationship", "relation", "colleague", "girlfriend", "boyfriend"]
 
     location_list = ["went", "came", "gone", "from", "go", "been", "visited"]
 
     ner_tagger = SennaNERTagger('/usr/share/senna-v3.0')
     tagger = SennaTagger('/usr/share/senna-v3.0')
-    # relations = extract_relations(sys.argv[1])
-    relations = pickle.load(open("relations.txt", "rb"))
+    relations = extract_relations(sys.argv[1])
+    # relations = pickle.load(open("relations.txt", "rb"))
 
     family_relations = set()
     output = dict()
@@ -230,6 +232,7 @@ if __name__ == "__main__":
         print(r)
 
     output["family_rel"] = list(family_relations)
+    output["name"] = sys.argv[1]
 
     influence = Counter()
     char_rel = defaultdict(list)
