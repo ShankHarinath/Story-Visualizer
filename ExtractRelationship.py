@@ -183,11 +183,13 @@ def get_family_rel(sentence, relation):
                 ner2 += " " + str(word_tokenize(ner[1])[1:][idx + 1]).split("/")[0]
                 characters.add(ner2)
             break
-
-    if str(word_tokenize(ner[0])[-1]).split("/")[0] == "'s":
-        rel = ner1 + " -> " + relation + " -> " + ner2
-    else:
-        rel = ner2 + " -> " + relation + " -> " + ner1
+    try:
+        if str(word_tokenize(ner[0])[-1]).split("/")[0] == "'s":
+            rel = ner1 + " -> " + relation + " -> " + ner2
+        else:
+            rel = ner2 + " -> " + relation + " -> " + ner1
+    except:
+        return
 
     if not ner1 or not ner2:
         return
@@ -242,9 +244,10 @@ if __name__ == "__main__":
 
         for word in words:
             if str(word) in characters:
-                char_rel[word].append(relation)
-                influence[word] += 1
-                total += 1
+                if relation not in char_rel[word]:
+                    char_rel[word].append(relation)
+                    influence[word] += 1
+                    total += 1
 
     print()
     print("Character Influence")
